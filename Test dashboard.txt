@@ -77,7 +77,10 @@ def fig_to_bytes(fig):
 
 def generate_clean_csv(df):
     """Genereer een goed geformatteerde CSV"""
+    # Maak een kopie om het origineel niet te wijzigen
     export_df = df.copy()
+    
+    # Gebruik puntkomma als scheidingsteken voor betere compatibiliteit
     csv = export_df.to_csv(index=False, sep=';', encoding='utf-8')
     return csv.encode('utf-8')
 
@@ -218,7 +221,7 @@ if 'df' not in st.session_state:
     st.session_state.locatie_toevoegen = False
 
 # ======================
-# LOCATIE TOEVOEGEN & VERWIJDEREN
+# LOCATIE TOEVOEGEN FORMULIER
 # ======================
 def toon_locatie_formulier():
     with st.form(key='locatie_form'):
@@ -248,15 +251,6 @@ def toon_locatie_formulier():
                 st.session_state.locatie_toevoegen = False
                 st.rerun()
 
-def verwijder_locatie(locatie):
-    """Verwijder een locatie uit de dataset"""
-    if locatie in st.session_state.df["Locatie"].values:
-        st.session_state.df = st.session_state.df[st.session_state.df["Locatie"] != locatie]
-        st.success(f"Locatie '{locatie}' is verwijderd")
-        st.rerun()
-    else:
-        st.error("Locatie niet gevonden")
-
 # ======================
 # PAGINA LAYOUT - TABBEN
 # ======================
@@ -265,25 +259,19 @@ tab1, tab2, tab3 = st.tabs(["🏠 Locatie Beoordelen", "📊 Locaties Vergelijke
 
 with tab3:
     # ======================
-    # TAB 3: LOCATIE TOEVOEGEN & VERWIJDEREN
+    # TAB 3: LOCATIE TOEVOEGEN
     # ======================
     st.title("➕ Nieuwe Locatie Toevoegen")
     toon_locatie_formulier()
     
-    # Toon bestaande locaties met verwijderoptie
+    # Toon bestaande locaties
     if not st.session_state.df.empty:
         st.subheader("Bestaande locaties")
-        
-        # Toon dataframe met verwijderknop per rij
-        for idx, row in st.session_state.df[["Locatie", "Datum", "Adres"]].iterrows():
-            cols = st.columns([4, 1])
-            with cols[0]:
-                st.write(f"**{row['Locatie']}** - {row['Datum']}")
-                if pd.notna(row['Adres']):
-                    st.caption(f"Adres: {row['Adres']}")
-            with cols[1]:
-                if st.button("❌ Verwijder", key=f"del_{row['Locatie']}"):
-                    verwijder_locatie(row['Locatie'])
+        st.dataframe(
+            st.session_state.df[["Locatie", "Datum", "Adres"]],
+            hide_index=True,
+            use_container_width=True
+        )
 
 with tab1:
     # ======================
@@ -342,56 +330,28 @@ with tab1:
         # Toon de gestylete data
         st.dataframe(
             styled_data.style.apply(
-                lambda x: [''] * (len(x)-1) + [f'background-color: {SCORE_COLORS[x["Score"]]}'],
+                lambda x: [f'background-color: {SCORE_COLORS[x["Score"]]}'] * len(x),  # Apply to all columns
                 axis=1
             ),
             hide_index=True,
             use_container_width=True
         )
         
-        # Staafdiagram
-        st.subheader("📊 Scoreverdeling")
-        fig, ax = plt.subplots(figsize=(10,4))
-        filtered_df = current_data.reset_index().melt(
-            id_vars="index",
-            var_name="Locatie",
-            value_name="Score"
-        )
-        bars = ax.bar(
-            filtered_df["index"],
-            filtered_df["Score"],
-            color=[SCORE_COLORS[x] for x in filtered_df["Score"]]
-        )
-        ax.set_ylim(0,5)
-        plt.xticks(rotation=45)
-        plt.title(f"Scores voor {selected_location}")
-        
-        # Voeg scorelabels toe
-        for bar in bars:
-            height = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2., height,
-                    f'{int(height)}',
-                    ha='center', va='bottom')
-        st.pyplot(fig)
-        
-        # Totaalscore
-        st.subheader("✅ Totaalbeoordeling")
-        totaalscore = filtered_df["Score"].sum()
+        # Bereken de totaalscore door de scores per criterium bij elkaar op te tellen
+        totaalscore = current_data.sum().sum()  # Optelt de waarden over alle criteria
         max_score = len(SCORE_LEGEND) * 5
-        
+
+        # Totaalscore weergave
         col_a, col_b = st.columns(2)
         with col_a:
             st.metric("Totaalscore", f"{totaalscore}/{max_score}")
         with col_b:
-            st.metric("Gemiddelde", f"{filtered_df['Score'].mean():.1f} ⭐")
-        
-        # Voortgangsbalk met bounds checking
+            st.metric("Gemiddelde", f"{current_data.mean().mean():.1f} ⭐")
+
+        # Voortgangsbalk
         progress_value = totaalscore / max_score
         progress_value = min(max(progress_value, 0.0), 1.0)
-        st.progress(
-            progress_value, 
-            text=f"{progress_value:.0%} van maximale score"
-        )
+        st.progress(progress_value, text=f"{progress_value:.0%} van maximale score")
 
 with tab2:
     # ======================
