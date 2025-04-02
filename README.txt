@@ -1,7 +1,7 @@
 4.3	 Het opgestelde model
 In dit interactieve dashboard is ontworpen om gebruikers te ondersteunen bij het beoordelen en vergelijken van locaties op basis van zes belangrijke criteria, zoals Ruimtelijke Inpassing, Milieueisen, en Technische Haalbaarheid. Het systeem is ontwikkeld in Python (Van Rossum & Drake, 2023) met behulp van Streamlit, een framework voor het bouwen van webapplicaties (Streamlit, 2023).Hieronder wordt stap voor stap uitgelegd hoe het dashboard werkt.
 
-De link naar het opgestelde dashboard: http://dashboardlocatiegeschiktheid.streamlit.app/
+De link naar het opgestelde dashboard: https://bouwlocatie-dashboard.streamlit.app/
 
 Stap 1: Een locatie toevoegen
 Voordat een locatie beoordeeld kan worden, moet deze eerst worden toegevoegd aan het systeem. 
