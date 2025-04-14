@@ -41,10 +41,10 @@ SCORE_LEGEND = {
         }
     },
     "Milieunormen": {
-        "Geluid": {
-            5: "≤ 80% van de normwaarde (Wet geluidhinder)",
-            3: "90-100% van de normwaarde",
-            1: "> normwaarde, overschrijding"
+        "Natura 2000-gebied": {
+            5: "Meer dan 5km verwijderd van Natura 2000-gebied",
+            3: "Bevindt zich binnen 3-5km van Natura 2000-gebied",
+            1: "In nabijheid <3km van Natura 2000-gebied"
         },
         "Luchtkwaliteit": {
             5: "Ruim binnen NSL-norm",
@@ -600,13 +600,14 @@ with tab1:
             )
               
             st.markdown("#### Onderstaande Beoordelingen zijn van toepassing zodra de Bouwplannen bekend zijn:")
-            
-            st.markdown("### Geluid")
-            st.caption("Wet geluidhinder - ≤80% normwaarde is optimaal")
+
+
+            st.markdown("### Natura 2000-gebied")
+            st.caption("Via atlasleefomgeving.nl kun je checken of er een Natura 2000-gebied in de omgeving ligt")
             geluid_score = st.radio(
                 "Geluidsniveau t.o.v. norm",
                 options=[1, 3, 5],
-                format_func=lambda x: f"{x} - {SCORE_LEGEND['Milieunormen']['Geluid'][x]}",
+                format_func=lambda x: f"{x} - {SCORE_LEGEND['Milieunormen']['Natura 2000-gebied'][x]}",
                 horizontal=True,
                 key=f"geluid_{selected_location}"
             )
