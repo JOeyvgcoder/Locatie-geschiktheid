@@ -589,7 +589,7 @@ with tab1:
             st.caption("Voer een bodemonderzoek uit volgens het SIKB-protocol om te bepalen of de grond schoon (Klasse 0) of verontreinigd (Klasse 1-4) is; raadpleeg het Bodemloket.")
             bodem_score = st.radio(
                 "Bodemclassificatie",
-                options=[1, 3, 5]
+                options=[1, 3, 5],
                 format_func=lambda x: f"{x} - {SCORE_LEGEND['Milieunormen']['Bodemkwaliteit'][x]}",
                 horizontal=True,
                 key=f"bodem_{selected_location}"
