@@ -274,12 +274,12 @@ def verwijder_locatie(locatie):
 
 def get_coordinates(address):
     """Haal coördinaten op voor een adres met geopy"""
-    geolocator = Nominatim(user_agent="locatie_beoordeling_app")
-    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
     try:
-        location = geocode(address)
+        geolocator = Nominatim(user_agent="locatie_app", timeout=10)  # 10 seconden timeout
+        location = geolocator.geocode(f"{address}, Nederland")  # Voeg land toe
         if location:
             return (location.latitude, location.longitude)
+        st.warning(f"Adres niet gevonden: '{address}'. Probeer een vollediger adres.")
         return None
     except Exception as e:
         st.error(f"Fout bij ophalen coördinaten: {str(e)}")
