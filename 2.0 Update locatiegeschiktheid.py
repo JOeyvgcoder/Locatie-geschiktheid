@@ -681,7 +681,7 @@ with tab1:
             fiets_score_value = 5 if fiets_score == "Aansluiting op LF-routes (Fietsersbond)" else 3 if fiets_score == "Redelijke verbindingen" else 1 if fiets_score == "Slechte fietsroutes" else None
 
             if None not in [wegen_score_value, ov_score_value, fiets_score_value]:
-                bereikbaarheid_score = round((wegen_score_value + ov_score_value + fiets_score_value) / 4)
+                bereikbaarheid_score = round((wegen_score_value + ov_score_value + fiets_score_value) / 3)
                 st.info(f"**Eindscore bereikbaarheid**: {bereikbaarheid_score}/5")
             else:
                 st.warning("Vul alle bereikbaarheid aspecten in voor een score")
