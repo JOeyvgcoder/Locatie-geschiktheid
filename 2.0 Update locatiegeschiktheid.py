@@ -666,7 +666,7 @@ with tab1:
                 index=None,
                 key=f"ov_{selected_location}"
             )
-            ov_score_value = 5 if ov_score == "OV-halte ≤400m" else 3 if ov_score == "OV-halte >400m" else 1 if ov_score == "Geen OV in de buurt" else None
+            ov_score_value = 5 if ov_score == "OV-halte ≤400m" else 3 if ov_score == "OV-halte >400m ≤2000m" else 1 if ov_score == "Geen OV in de buurt" else None
 
             st.markdown("### Fietsbereikbaarheid")
             st.caption("Controleer aansluiting op LF-routes via de Fietsersbond-classificatie.")
