@@ -30,7 +30,7 @@ SCORE_LEGEND = {
             1: "Zware beperkingen zoals pandrecht/overpad"
         },
         "Nutsvoorzieningen": {
-            5: "Alle voorzieningen aanwezig en operationeel",
+            5: "Water, elektra en gas aanwezig (directe aansluiting)",
             3: "Niet aanwezig, maar makkelijk aan te leggen",
             1: "Niet aanwezig en lastig te realiseren"
         },
@@ -560,7 +560,7 @@ with tab1:
             st.caption("Check bij netbeheerder (Liander/Enexis) of Kadaster")
             nuts = st.radio(
                 "Beschikbaarheid nutsvoorzieningen",
-                options=["Alle voorzieningen aanwezig en operationeel",
+                options=["Water, elektra en gas aanwezig met directe aansluiting",
                         "Niet aanwezig, maar makkelijk aan te leggen",
                         "Niet aanwezig en lastig te realiseren"],
                 index=None,
