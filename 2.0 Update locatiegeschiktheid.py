@@ -273,7 +273,7 @@ def verwijder_locatie(locatie):
 
 def get_coordinates(address):
     """Haal coördinaten op voor een adres met geopy"""
-    geolocator = Nominatim(user_agent="locatie_beoordeling_app")
+    geolocator = Nominatim(user_agent="locatie_beoordeling_app", timeout=10)
     try:
         location = geolocator.geocode(address)
         if location:
