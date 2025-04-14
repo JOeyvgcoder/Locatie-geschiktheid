@@ -523,7 +523,7 @@ with tab1:
         
         # 1. RUIMTELIJKE ASPECTEN
         with st.expander("🏙️ Ruimtelijke Aspecten", expanded=True):
-            st.markdown("### Bestemmingsplan")
+            st.markdown("### Bestemming")
             st.caption("Controleer de conformiteit met het Omgevingsplan 2024 via het Omgevingsloket.")
             bestemmingsplan = st.radio(
                 "Conformiteit omgevingsplan",
