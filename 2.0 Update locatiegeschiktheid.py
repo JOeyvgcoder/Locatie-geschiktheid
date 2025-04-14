@@ -590,7 +590,6 @@ with tab1:
             bodem_score = st.radio(
                 "Bodemclassificatie",
                 options=[1, 3, 5]
-                index=None,
                 format_func=lambda x: f"{x} - {SCORE_LEGEND['Milieunormen']['Bodemkwaliteit'][x]}",
                 horizontal=True,
                 key=f"bodem_{selected_location}"
