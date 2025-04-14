@@ -1,3 +1,4 @@
+# Write your code here :-)
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -476,6 +477,7 @@ with tab3:
 
 with tab1:
     st.title("📍 Locatie Beoordelen")
+    st.info("Hier ga je met behulp van zorgvuldig gekozen criterium een bouwlocatie beoordelen. Zie hieronder het menu 'Hoe werkt dit beoordelingsysteem' voor meer uitleg.")
     
     if st.session_state.df.empty:
         st.warning("Voeg eerst een locatie toe via het '➕ Locatie Toevoegen' tabblad")
@@ -513,6 +515,22 @@ with tab1:
             else:
                 st.warning("Geen kaart beschikbaar - voeg coördinaten toe")
 
+        with st.expander("📋 Hoe werkt dit beoordelingssysteem?", expanded=False):
+            st.markdown("""
+            **Werkwijze:**
+            
+            1. **Selecteer eerst een locatie** in het bovenstaande dropdown-menu
+            2. **Doorloop alle secties** (Ruimtelijk, Milieu, etc.) en geef een score 
+            **Let op!** boven de beoordeling van een bepaald onderdeel staat aangegeven hoe en waar je de betreffende informatie kan vinden voor de beoordeling.
+            3. **Vul alle verplichte velden** in voor een volledige beoordeling
+            4. **Analyseer de eindscore** die automatisch wordt berekend
+            
+            **Scoring:**
+            - Elke categorie krijgt een score van 1-5 (1=ongunstig, 5=zeer gunstig)
+            - De weging tussen categorieën is gelijk
+            - Eindscore is het gemiddelde van alle categorieën
+            """)
+
         # --- Objectieve beoordeling ---
         st.subheader("Bouwlocatie Beoordeling")
         
@@ -530,57 +548,56 @@ with tab1:
             )
             bestemmingsplan_score = 5 if bestemmingsplan == "Volledig conform omgevingsplan" else 3 if bestemmingsplan == "Kleine afwijking, vergunning nodig" else 1 if bestemmingsplan == "Niet conform, planwijziging vereist" else None
 
-        if bestemmingsplan == "Niet conform, planwijziging vereist":
-            st.error("⚠️ Locatie ongeschikt - bestemmingsplan conflict")
-            ruimtelijke_score = 1
-            bestemmingsplan_score = 1
-            kadastraal_score = 1       
-            nuts_score = 1          
-            infra_score = 1      
-        else:
-
-            st.markdown("### Kadastrale beperkingen")
-            st.caption("Raadpleeg het Kadaster om eventuele erfdienstbaarheden of beperkingen te controleren.")
-            kadastraal = st.radio(
-                "Aanwezigheid beperkingen",
-                
-                options=["Geen beperkingen",
-                        "Beperkte erfdienstbaarheden",
-                        "Zware beperkingen zoals pandrecht/overpad"],
-                index=None,
-                key=f"kadastraal_{selected_location}"
-            )
-            kadastraal_score = 5 if kadastraal == "Geen beperkingen" else 3 if kadastraal == "Beperkte erfdienstbaarheden" else 1 if kadastraal == "Zware beperkingen zoals pandrecht/overpad" else None
-
-            st.markdown("### Nutsvoorzieningen")
-            st.caption("Check bij netbeheerder (Liander/Enexis) of Kadaster")
-            nuts = st.radio(
-                "Beschikbaarheid nutsvoorzieningen",
-                options=["Water, elektra en gas aanwezig met directe aansluiting",
-                        "Niet aanwezig, maar makkelijk aan te leggen",
-                        "Niet aanwezig en lastig te realiseren"],
-                index=None,
-                key=f"nuts_{selected_location}"
-            )
-            nuts_score = 5 if nuts == "Alle voorzieningen aanwezig en operationeel" else 3 if nuts == "Niet aanwezig, maar makkelijk aan te leggen" else 1 if nuts == "Niet aanwezig en lastig te realiseren" else None
-
-            st.markdown("### Infrastructuur")
-            st.caption("Voer een KLIC-melding uit bij het Kadaster om ondergrondse infrastructuur te identificeren.")
-            infrastructuur = st.radio(
-                "Belemmeringen in grond",
-                options=["Geen obstakels",
-                        "Verplaatsbare obstakels aanwezig",
-                        "Vaste obstructies, KLIC-melding verplicht"],
-                index=None,
-                key=f"infrastructuur_{selected_location}"
-            )
-            infrastructuur_score = 5 if infrastructuur == "Geen obstakels" else 3 if infrastructuur == "Verplaatsbare obstakels aanwezig" else 1 if infrastructuur == "Vaste obstructies, KLIC-melding verplicht" else None
-
-            if None not in [bestemmingsplan_score, kadastraal_score, nuts_score, infrastructuur_score]:
-                ruimtelijke_score = round((bestemmingsplan_score + kadastraal_score + nuts_score + infrastructuur_score) / 4)
-                st.info(f"**Eindscore ruimtelijke aspecten**: {ruimtelijke_score}/5")
+            if bestemmingsplan == "Niet conform, planwijziging vereist":
+                st.error("⚠️ Locatie ongeschikt - bestemmingsplan conflict")
+                ruimtelijke_score = 1
+                bestemmingsplan_score = 1
+                kadastraal_score = 1       
+                nuts_score = 1          
+                infra_score = 1      
             else:
-                st.warning("Vul alle ruimtelijke aspecten in voor een score")
+                st.markdown("### Kadastrale beperkingen")
+                st.caption("Raadpleeg het Kadaster om eventuele erfdienstbaarheden of beperkingen te controleren.")
+                kadastraal = st.radio(
+                    "Aanwezigheid beperkingen",
+                    options=["Geen beperkingen",
+                            "Beperkte erfdienstbaarheden",
+                            "Zware beperkingen zoals pandrecht/overpad"],
+                    index=None,
+                    key=f"kadastraal_{selected_location}"
+                )
+                kadastraal_score = 5 if kadastraal == "Geen beperkingen" else 3 if kadastraal == "Beperkte erfdienstbaarheden" else 1 if kadastraal == "Zware beperkingen zoals pandrecht/overpad" else None
+
+                st.markdown("### Nutsvoorzieningen")
+                st.caption("Check bij netbeheerder (Liander/Enexis) of Kadaster")
+                nuts = st.radio(
+                    "Beschikbaarheid nutsvoorzieningen",
+                    options=["Water, elektra en gas aanwezig met directe aansluiting",
+                            "Niet aanwezig, maar makkelijk aan te leggen",
+                            "Niet aanwezig en lastig te realiseren"],
+                    index=None,
+                    key=f"nuts_{selected_location}"
+                )
+                nuts_score = 5 if nuts == "Water, elektra en gas aanwezig met directe aansluiting" else 3 if nuts == "Niet aanwezig, maar makkelijk aan te leggen" else 1 if nuts == "Niet aanwezig en lastig te realiseren" else None
+
+                st.markdown("### Infrastructuur")
+                st.caption("Voer een KLIC-melding uit bij het Kadaster om ondergrondse infrastructuur te identificeren.")
+                infrastructuur = st.radio(
+                    "Belemmeringen in grond",
+                    options=["Geen obstakels",
+                            "Verplaatsbare obstakels aanwezig",
+                            "Vaste obstructies, KLIC-melding verplicht"],
+                    index=None,
+                    key=f"infrastructuur_{selected_location}"
+                )
+                infrastructuur_score = 5 if infrastructuur == "Geen obstakels" else 3 if infrastructuur == "Verplaatsbare obstakels aanwezig" else 1 if infrastructuur == "Vaste obstructies, KLIC-melding verplicht" else None
+
+                if None not in [bestemmingsplan_score, kadastraal_score, nuts_score, infrastructuur_score]:
+                    ruimtelijke_score = round((bestemmingsplan_score + kadastraal_score + nuts_score + infrastructuur_score) / 4)
+                    st.info(f"**Eindscore ruimtelijke aspecten**: {ruimtelijke_score}/5")
+                else:
+                    st.warning("Vul alle ruimtelijke aspecten in voor een score")
+                    
 
         # 2. MILIEU & KLIMAAT
         with st.expander("🌍 Milieu & Klimaat", expanded=True):
@@ -592,22 +609,26 @@ with tab1:
                 options=[1, 3, 5],
                 format_func=lambda x: f"{x} - {SCORE_LEGEND['Milieunormen']['Bodemkwaliteit'][x]}",
                 horizontal=True,
+                index=None,
                 key=f"bodem_{selected_location}"
             )
 
-
             st.markdown("### Natura 2000-gebied")
             st.caption("Via atlasleefomgeving.nl kun je checken of er een Natura 2000-gebied in de omgeving ligt")
-            geluid_score = st.radio(
-                "Geluidsniveau t.o.v. norm",
+            natura_score = st.radio(
+                "Natura 2000-gebied",
                 options=[1, 3, 5],
                 format_func=lambda x: f"{x} - {SCORE_LEGEND['Milieunormen']['Natura 2000-gebied'][x]}",
                 horizontal=True,
-                key=f"geluid_{selected_location}"
+                index=None,
+                key=f"natura_{selected_location}"
             )
 
-            milieu_score = round((geluid_score + bodem_score) / 2)
-            st.info(f"**Eindscore milieu & klimaat**: {milieu_score}/5")
+            if None not in [bodem_score, natura_score]:
+                milieu_score = round((bodem_score + natura_score) / 2)
+                st.info(f"**Eindscore milieu & klimaat**: {milieu_score}/5")
+            else:
+                st.warning("Vul alle milieu & klimaat aspecten in voor een score")
 
         # 3. VEILIGHEID & TECHNIEK
         with st.expander("🛡️ Veiligheid & Technisch", expanded=True):
@@ -764,6 +785,8 @@ with tab2:
     # TAB 2: LOCATIE VERGELIJKING
     # ======================
     st.title("📊 Dashboard Locaties Vergelijken")
+    st.info("Hier kun je meerdere locaties met elkaar vergelijken. Hiervoor moeten de locaties wel eerst beoordeelt zijn onder het menu 'Locatie beoordelen'.")
+    
 
     if st.session_state.df.empty:
         st.warning("Voeg eerst locaties toe via het '➕ Locatie Toevoegen' tabblad")
