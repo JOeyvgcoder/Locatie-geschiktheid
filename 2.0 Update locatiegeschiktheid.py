@@ -115,7 +115,8 @@ SCORE_COLORS = {
 def cached_geocode(address):
     """Gecachede versie van geolocatie-opzoekingen"""
     geolocator = Nominatim(user_agent="cached_locator")
-    return geolocator.geocode(address)
+    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
+    return geocode(address)
 
 # ======================
 # PDF HULPFUNCTIES
@@ -273,9 +274,10 @@ def verwijder_locatie(locatie):
 
 def get_coordinates(address):
     """Haal coördinaten op voor een adres met geopy"""
-    geolocator = Nominatim(user_agent="locatie_beoordeling_app", timeout=10)
+    geolocator = Nominatim(user_agent="locatie_beoordeling_app")
+    geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
     try:
-        location = geolocator.geocode(address)
+        location = geocode(address)
         if location:
             return (location.latitude, location.longitude)
         return None
