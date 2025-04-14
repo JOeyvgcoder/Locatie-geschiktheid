@@ -548,6 +548,7 @@ with tab1:
             st.caption("Raadpleeg het Kadaster om eventuele erfdienstbaarheden of beperkingen te controleren.")
             kadastraal = st.radio(
                 "Aanwezigheid beperkingen",
+                
                 options=["Geen beperkingen",
                         "Beperkte erfdienstbaarheden",
                         "Zware beperkingen zoals pandrecht/overpad"],
@@ -598,8 +599,6 @@ with tab1:
                 horizontal=True,
                 key=f"bodem_{selected_location}"
             )
-              
-            st.markdown("#### Onderstaande Beoordelingen zijn van toepassing zodra de Bouwplannen bekend zijn:")
 
 
             st.markdown("### Natura 2000-gebied")
@@ -612,17 +611,7 @@ with tab1:
                 key=f"geluid_{selected_location}"
             )
 
-            st.markdown("### Waterhuishouding")
-            st.caption("Watertoets verplicht bij tekort ≥10%")
-            water_score = st.radio(
-                "Waterbergingscapaciteit",
-                options=[1, 3, 5],
-                format_func=lambda x: f"{x} - {SCORE_LEGEND['Milieunormen']['Waterhuishouding'][x]}",
-                horizontal=True,
-                key=f"water_{selected_location}"
-            )
-
-            milieu_score = round((geluid_score + bodem_score + water_score) / 4)
+            milieu_score = round((geluid_score + bodem_score) / 2)
             st.info(f"**Eindscore milieu & klimaat**: {milieu_score}/5")
 
         # 3. VEILIGHEID & TECHNIEK
