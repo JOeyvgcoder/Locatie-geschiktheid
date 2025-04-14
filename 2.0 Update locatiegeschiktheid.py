@@ -55,11 +55,6 @@ SCORE_LEGEND = {
             5: "Klasse 0 (schoon)",
             3: "Klasse 1-2 (beperkte sanering)",
             1: "Klasse 3-4 (zware verontreiniging)"
-        },
-        "Waterhuishouding": {
-            5: "+20% buffercapaciteit",
-            3: "Exacte capaciteit",
-            1: "Tekort ≥ 10%, watertoets nodig"
         }
     },
     "Veiligheid": {
