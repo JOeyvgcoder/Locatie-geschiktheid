@@ -366,6 +366,9 @@ def toon_locatie_formulier():
                     "Opmerkingen": opmerkingen
                 }
 
+                for categorie in ["Bestemmingsplan", "Bereikbaarheid", "Locatiekenmerken", "Milieu"]:
+                    nieuwe_locatie[categorie] = 0
+
                 # Voeg standaard scores toe
                 for criterium in SCORE_LEGEND.keys():
                     nieuwe_locatie[criterium] = 0
@@ -918,13 +921,22 @@ with tab2:
             default=st.session_state.df["Locatie"].tolist()[:2] if len(st.session_state.df) > 1 else st.session_state.df["Locatie"].tolist()
         )
 
+
         if len(selected_locs) > 0:
             # Vergelijkingstabel
             st.markdown("📋 Scorevergelijking")
-            comparison_df = st.session_state.df[st.session_state.df["Locatie"].isin(selected_locs)].fillna(0).set_index("Locatie")[[
-            "Bestemmingsplan", "Bereikbaarheid", "Locatiekenmerken", "Milieu",
-            "Oppervlakte"
-    ]]
+
+            # Zorg dat de vereiste kolommen bestaan
+            vereiste_kolommen = ["Bestemmingsplan", "Bereikbaarheid", "Locatiekenmerken", "Milieu", "Oppervlakte"]
+            for kolom in vereiste_kolommen:
+                if kolom not in st.session_state.df.columns:
+                    st.session_state.df[kolom] = 0
+
+            # Selectie en opmaak van vergelijkingstabel
+            comparison_df = st.session_state.df[
+                st.session_state.df["Locatie"].isin(selected_locs)
+            ].fillna(0).set_index("Locatie")[vereiste_kolommen]
+
             
             # Formatteer de scores zonder decimalen
             styled_df = comparison_df.style.format("{:.0f}", subset=["Bestemmingsplan", "Bereikbaarheid", 
